@@ -59,11 +59,11 @@ export function Navbar() {
               value={currency}
               onChange={e => setCurrency(e.target.value as CurrencyCode)}
               style={{
-                height: 34, padding: '0 28px 0 10px', borderRadius: 8, border: '1px solid #E2E8F0',
-                background: '#F8FAFC', fontSize: 12, fontWeight: 500, color: '#475569',
+                height: 28, width: 72, padding: '0 22px 0 8px', borderRadius: 6, border: '1px solid #E2E8F0',
+                background: '#F8FAFC', fontSize: 11, fontWeight: 500, color: '#475569',
                 cursor: 'pointer', appearance: 'none',
-                backgroundImage: "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E\")",
-                backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center', backgroundSize: '14px',
+                backgroundImage: "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 4.5 3 3 3-3'/%3E%3C/svg%3E\")",
+                backgroundRepeat: 'no-repeat', backgroundPosition: 'right 5px center', backgroundSize: '12px',
               }}
             >
               {CURRENCIES.map(c => (
