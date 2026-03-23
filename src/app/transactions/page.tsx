@@ -11,7 +11,7 @@ import { Plus, Search, Trash2, Download } from "lucide-react";
 const card: React.CSSProperties = { background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.05)', overflow: 'hidden' };
 
 export default function TransactionsPage() {
-  const { categories, transactions, addTransaction, deleteTransaction } = useBudget();
+  const { categories, transactions, addTransaction, deleteTransaction, currency } = useBudget();
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [catFilter, setCatFilter] = useState("all");
@@ -50,13 +50,13 @@ export default function TransactionsPage() {
       {/* Summary */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 8, background: '#ECFDF5', border: '1px solid #A7F3D0' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#059669' }}>Income: {formatCurrency(totalIncome)}</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#059669' }}>Income: {formatCurrency(totalIncome, currency)}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 8, background: '#FEF2F2', border: '1px solid #FECACA' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#EF4444' }}>Expenses: {formatCurrency(totalExpense)}</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#EF4444' }}>Expenses: {formatCurrency(totalExpense, currency)}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 8, background: '#EDE9FE', border: '1px solid #DDD6FE' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#7C3AED' }}>Net: {formatCurrency(totalIncome - totalExpense)}</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#7C3AED' }}>Net: {formatCurrency(totalIncome - totalExpense, currency)}</span>
         </div>
       </div>
 
@@ -98,7 +98,7 @@ export default function TransactionsPage() {
                   <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>{formatDate(tx.date)} &middot; {tx.categoryName}</p>
                 </div>
                 <span style={{ fontSize: 14, fontWeight: 600, fontVariantNumeric: 'tabular-nums', flexShrink: 0, color: tx.type === 'income' ? '#059669' : '#EF4444' }}>
-                  {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
+                  {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount, currency)}
                 </span>
                 <button onClick={() => deleteTransaction(tx.id)} className="cursor-pointer" style={{ width: 28, height: 28, borderRadius: 6, border: 'none', background: 'transparent', color: '#CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Trash2 style={{ width: 14, height: 14 }} />

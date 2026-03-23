@@ -12,7 +12,7 @@ const card: React.CSSProperties = { background: '#FFFFFF', border: '1px solid #E
 const COLORS = ['#7C3AED', '#059669', '#2563EB', '#F59E0B', '#EC4899', '#F97316', '#06B6D4', '#8B5CF6', '#EF4444', '#64748B'];
 
 export default function BudgetsPage() {
-  const { categories, setBudget, addCategory, deleteCategory } = useBudget();
+  const { categories, setBudget, addCategory, deleteCategory, currency } = useBudget();
   const [showAdd, setShowAdd] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [editAmount, setEditAmount] = useState("");
@@ -40,7 +40,7 @@ export default function BudgetsPage() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B' }}>Total Monthly Budget</p>
-          <p style={{ fontSize: 28, fontWeight: 800, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em', color: '#0F172A', marginTop: 4 }}>{formatCurrency(total)}</p>
+          <p style={{ fontSize: 28, fontWeight: 800, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em', color: '#0F172A', marginTop: 4 }}>{formatCurrency(total, currency)}</p>
         </div>
         <Button onClick={() => setShowAdd(true)} className="cursor-pointer">
           <Plus style={{ width: 16, height: 16, marginRight: 6 }} /> Add Category
@@ -54,7 +54,7 @@ export default function BudgetsPage() {
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
               <div>
                 <p style={{ fontSize: 14, fontWeight: 600, color: '#0F172A' }}>{cat.name}</p>
-                <p style={{ fontSize: 22, fontWeight: 800, fontVariantNumeric: 'tabular-nums', color: '#0F172A', marginTop: 4 }}>{formatCurrency(cat.monthlyBudget)}</p>
+                <p style={{ fontSize: 22, fontWeight: 800, fontVariantNumeric: 'tabular-nums', color: '#0F172A', marginTop: 4 }}>{formatCurrency(cat.monthlyBudget, currency)}</p>
                 <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>per month</p>
               </div>
               <div style={{ display: 'flex', gap: 4 }}>

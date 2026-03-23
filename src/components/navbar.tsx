@@ -3,6 +3,8 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Wallet, ArrowLeftRight, Target } from "lucide-react";
+import { useBudget } from "@/lib/store";
+import { CURRENCIES, type CurrencyCode } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -13,6 +15,7 @@ const navLinks = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const { currency, setCurrency } = useBudget();
 
   return (
     <>
@@ -50,9 +53,26 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Avatar */}
-          <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg, #7C3AED, #9333EA)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#fff' }}>JP</span>
+          {/* Currency + Avatar */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <select
+              value={currency}
+              onChange={e => setCurrency(e.target.value as CurrencyCode)}
+              style={{
+                height: 34, padding: '0 28px 0 10px', borderRadius: 8, border: '1px solid #E2E8F0',
+                background: '#F8FAFC', fontSize: 12, fontWeight: 500, color: '#475569',
+                cursor: 'pointer', appearance: 'none',
+                backgroundImage: "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E\")",
+                backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center', backgroundSize: '14px',
+              }}
+            >
+              {CURRENCIES.map(c => (
+                <option key={c.code} value={c.code}>{c.code} ({c.symbol})</option>
+              ))}
+            </select>
+            <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg, #7C3AED, #9333EA)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#fff' }}>JP</span>
+            </div>
           </div>
         </div>
       </header>

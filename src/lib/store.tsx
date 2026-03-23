@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { type CurrencyCode } from "./utils";
 
 // ── Types ──────────────────────────────────────────────────────
 
@@ -34,6 +35,8 @@ interface BudgetStore {
   categories: BudgetCategory[];
   transactions: Transaction[];
   goals: SavingsGoal[];
+  currency: CurrencyCode;
+  setCurrency: (code: CurrencyCode) => void;
   addTransaction: (tx: Omit<Transaction, "id">) => void;
   deleteTransaction: (id: string) => void;
   setBudget: (categoryId: string, amount: number) => void;
@@ -102,6 +105,7 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
   const [categories, setCategories] = useState<BudgetCategory[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
+  const [currency, setCurrencyState] = useState<CurrencyCode>('USD');
   const [loaded, setLoaded] = useState(false);
 
   // Load from localStorage on mount
@@ -110,6 +114,8 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
       const cats = localStorage.getItem("budgetly_categories");
       const txs = localStorage.getItem("budgetly_transactions");
       const gls = localStorage.getItem("budgetly_goals");
+      const savedCurrency = localStorage.getItem("budgetly_currency");
+      if (savedCurrency) setCurrencyState(savedCurrency as CurrencyCode);
       if (cats && txs && gls) {
         setCategories(JSON.parse(cats));
         setTransactions(JSON.parse(txs));
@@ -136,6 +142,11 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("budgetly_transactions", JSON.stringify(transactions));
     localStorage.setItem("budgetly_goals", JSON.stringify(goals));
   }, [categories, transactions, goals, loaded]);
+
+  const setCurrency = useCallback((code: CurrencyCode) => {
+    setCurrencyState(code);
+    localStorage.setItem("budgetly_currency", code);
+  }, []);
 
   const addTransaction = useCallback((tx: Omit<Transaction, "id">) => {
     setTransactions(prev => [{ ...tx, id: crypto.randomUUID() }, ...prev]);
@@ -188,7 +199,7 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
   if (!loaded) return null;
 
   return (
-    <BudgetContext.Provider value={{ categories, transactions, goals, addTransaction, deleteTransaction, setBudget, addCategory, deleteCategory, addGoal, updateGoal, deleteGoal, getMonthlyStats, getCategorySpending }}>
+    <BudgetContext.Provider value={{ categories, transactions, goals, currency, setCurrency, addTransaction, deleteTransaction, setBudget, addCategory, deleteCategory, addGoal, updateGoal, deleteGoal, getMonthlyStats, getCategorySpending }}>
       {children}
     </BudgetContext.Provider>
   );

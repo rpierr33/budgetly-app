@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useMemo } from "react";
 import { useBudget } from "@/lib/store";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate, getCurrencySymbol } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Wallet, DollarSign, PiggyBank } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
@@ -10,7 +10,7 @@ const label: React.CSSProperties = { fontSize: 11, fontWeight: 600, textTransfor
 const bigNum: React.CSSProperties = { fontSize: 28, fontWeight: 800, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em', color: '#0F172A' };
 
 export default function DashboardPage() {
-  const { categories, transactions, getMonthlyStats, getCategorySpending } = useBudget();
+  const { categories, transactions, getMonthlyStats, getCategorySpending, currency } = useBudget();
   const [monthOffset, setMonthOffset] = useState(0);
 
   const currentMonth = useMemo(() => {
@@ -65,7 +65,7 @@ export default function DashboardPage() {
             </div>
             <span style={label}>Budget</span>
           </div>
-          <p style={bigNum}>{formatCurrency(stats.totalBudget)}</p>
+          <p style={bigNum}>{formatCurrency(stats.totalBudget, currency)}</p>
         </div>
         <div style={{ ...card, padding: '20px 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
@@ -74,7 +74,7 @@ export default function DashboardPage() {
             </div>
             <span style={label}>Spent</span>
           </div>
-          <p style={{ ...bigNum, color: '#EF4444' }}>{formatCurrency(stats.totalSpent)}</p>
+          <p style={{ ...bigNum, color: '#EF4444' }}>{formatCurrency(stats.totalSpent, currency)}</p>
         </div>
         <div style={{ ...card, padding: '20px 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
@@ -83,7 +83,7 @@ export default function DashboardPage() {
             </div>
             <span style={label}>Remaining</span>
           </div>
-          <p style={{ ...bigNum, color: stats.remaining >= 0 ? '#059669' : '#EF4444' }}>{formatCurrency(stats.remaining)}</p>
+          <p style={{ ...bigNum, color: stats.remaining >= 0 ? '#059669' : '#EF4444' }}>{formatCurrency(stats.remaining, currency)}</p>
         </div>
         <div style={{ ...card, padding: '20px 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
@@ -116,7 +116,7 @@ export default function DashboardPage() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                       <span style={{ fontSize: 13, fontWeight: 500, color: '#0F172A' }}>{cat.name}</span>
                       <span style={{ fontSize: 12, fontVariantNumeric: 'tabular-nums', color: '#64748B' }}>
-                        {formatCurrency(spent)} / {formatCurrency(cat.monthlyBudget)}
+                        {formatCurrency(spent, currency)} / {formatCurrency(cat.monthlyBudget, currency)}
                       </span>
                     </div>
                     <div style={{ height: 4, borderRadius: 99, background: '#F1F5F9', overflow: 'hidden' }}>
@@ -139,8 +139,8 @@ export default function DashboardPage() {
               <BarChart data={chartData} margin={{ left: 0, right: 0, top: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} width={45} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
-                <Tooltip formatter={(v) => formatCurrency(Number(v))} contentStyle={{ borderRadius: 8, border: '1px solid #E2E8F0', fontSize: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }} />
+                <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} width={45} tickFormatter={v => `${getCurrencySymbol(currency)}${(v / 1000).toFixed(0)}k`} />
+                <Tooltip formatter={(v) => formatCurrency(Number(v), currency)} contentStyle={{ borderRadius: 8, border: '1px solid #E2E8F0', fontSize: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }} />
                 <Bar dataKey="spent" name="Spent" fill="#7C3AED" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -162,7 +162,7 @@ export default function DashboardPage() {
                   <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>{formatDate(tx.date)} &middot; {tx.categoryName}</p>
                 </div>
                 <span style={{ fontSize: 14, fontWeight: 600, fontVariantNumeric: 'tabular-nums', flexShrink: 0, color: tx.type === 'income' ? '#059669' : '#EF4444' }}>
-                  {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
+                  {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount, currency)}
                 </span>
               </div>
             ))}
